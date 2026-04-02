@@ -150,10 +150,10 @@ All settings are loaded from environment variables (`.env` file at the project r
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `APP_NAME` | `WarrantyWise` | Application name shown in OpenAPI docs |
+| `APP_NAME` | `ClaimScope` | Application name shown in OpenAPI docs |
 | `APP_ENV` | `local` | Environment label (`local`, `staging`, `prod`) |
 | `APP_VERSION` | `0.1.0` | API version string |
-| `DUCKDB_PATH` | `data/duckdb/warrantywise.duckdb` | Path to the DuckDB serving file |
+| `DUCKDB_PATH` | `data/duckdb/claimscope.duckdb` | Path to the DuckDB serving file |
 | `RAW_DATA_PATH` | `data/raw/claim.xlsx` | Path to the source Excel file |
 | `LOG_LEVEL` | `INFO` | Python logging level |
 | `ENABLE_MODEL_ENDPOINTS` | `false` | Enable optional LightGBM severity endpoints |

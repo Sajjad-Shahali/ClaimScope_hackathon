@@ -29,7 +29,7 @@ data/
 │   └── claim_detail_mart.parquet     ← Full per-claim records for the detail modal
 │
 └── duckdb/
-    └── warrantywise.duckdb           ← Serving database (all marts loaded as tables)
+    └── claimscope.duckdb           ← Serving database (all marts loaded as tables)
 ```
 
 ---
@@ -136,13 +136,13 @@ All parquets in `marts/` are pre-aggregated views of `claims_anomaly.parquet`. T
 
 ## DuckDB database
 
-`duckdb/warrantywise.duckdb` is the single-file OLAP database that the backend API reads from at runtime. It contains all seven mart tables as registered views over the parquet files.
+`duckdb/claimscope.duckdb` is the single-file OLAP database that the backend API reads from at runtime. It contains all seven mart tables as registered views over the parquet files.
 
 ### Connecting directly (for debugging)
 
 ```python
 import duckdb
-con = duckdb.connect("data/duckdb/warrantywise.duckdb", read_only=True)
+con = duckdb.connect("data/duckdb/claimscope.duckdb", read_only=True)
 con.execute("SHOW TABLES").fetchall()
 con.execute("SELECT COUNT(*) FROM warranty_mart").fetchone()
 ```

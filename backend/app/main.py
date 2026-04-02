@@ -22,7 +22,7 @@ app = FastAPI(
     title=settings.app_name,
     version=settings.app_version,
     description=(
-        "WarrantyWise is a claims portfolio intelligence backend for explainable insurance analytics. "
+        "ClaimScope is a vehicle claims portfolio intelligence backend for explainable insurance analytics. "
         "Premium-based outputs are labelled as imbalance proxies, not true profitability."
     ),
     openapi_tags=[

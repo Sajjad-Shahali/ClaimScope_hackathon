@@ -26,7 +26,7 @@ data/processed/claims_featured.parquet
 data/processed/claims_anomaly.parquet
         │
         ▼  6. marts.py
-data/marts/*.parquet  +  data/duckdb/warrantywise.duckdb
+data/marts/*.parquet  +  data/duckdb/claimscope.duckdb
         │
         ▼  (optional) 7. train_severity_model.py
 LightGBM severity benchmark artefacts
@@ -157,7 +157,7 @@ Aggregates the fully-scored claims into seven analytic mart parquets, then loads
 | `claim_detail_mart.parquet` | Full per-claim record with all fields for the detail modal |
 
 **Input:** `data/processed/claims_anomaly.parquet`  
-**Output:** `data/marts/*.parquet`, `data/duckdb/warrantywise.duckdb`
+**Output:** `data/marts/*.parquet`, `data/duckdb/claimscope.duckdb`
 
 ---
 

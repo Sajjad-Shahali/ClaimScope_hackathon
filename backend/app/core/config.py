@@ -8,10 +8,10 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
 
-    app_name: str = Field(default="WarrantyWise", alias="APP_NAME")
+    app_name: str = Field(default="ClaimScope", alias="APP_NAME")
     app_env: str = Field(default="local", alias="APP_ENV")
     app_version: str = Field(default="0.1.0", alias="APP_VERSION")
-    duckdb_path: Path = Field(default=Path("data/duckdb/warrantywise.duckdb"), alias="DUCKDB_PATH")
+    duckdb_path: Path = Field(default=Path("data/duckdb/claimscope.duckdb"), alias="DUCKDB_PATH")
     raw_data_path: Path = Field(default=Path("data/raw/claim.xlsx"), alias="RAW_DATA_PATH")
     log_level: str = Field(default="INFO", alias="LOG_LEVEL")
     enable_model_endpoints: bool = Field(default=False, alias="ENABLE_MODEL_ENDPOINTS")
