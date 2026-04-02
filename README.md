@@ -105,7 +105,7 @@ ClaimScope_hackathon/
 │       ├── db/            ← lazy database connection
 │       └── core/          ← config + logging
 │
-├── frontend/
+└── frontend/
     ├── src/
     │   ├── pages/         ← Overview, Warranties, Geography, Vehicles, Anomalies, Claims, Insights, Intro
     │   ├── ui/
