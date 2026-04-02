@@ -106,10 +106,10 @@ ClaimScope_hackathon/
 │       └── core/          ← config + logging
 │
 ├── frontend/
-│   ├── src/
-│   │   ├── pages/         ← Overview, Warranties, Geography, Vehicles, Anomalies, Claims, Insights, Intro
-│   │   ├── ui/
-│   │   │   ├── components/ ← KpiCard, ChartCard, DataTable, InsightList, MetricPills, FilterDock …
+    ├── src/
+    │   ├── pages/         ← Overview, Warranties, Geography, Vehicles, Anomalies, Claims, Insights, Intro
+    │   ├── ui/
+    │   │   ├── components/ ← KpiCard, ChartCard, DataTable, InsightList, MetricPills, FilterDock …
     │   │   └── layout/    ← AppLayout, Sidebar, TopBar
     │   ├── hooks/         ← useApiQuery, useDashboardFilters
     │   ├── lib/           ← api client, utils, formatters
