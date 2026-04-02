@@ -202,7 +202,7 @@ export function IntroPage() {
 
         {/* Description */}
         <p
-          className="mt-5 max-w-xl text-sm text-slate-500 text-center leading-7 animate-fade-in"
+          className="mt-5 max-w-xl text-sm text-slate-500 text-center animate-fade-in"
           style={{ animationDelay: '0.3s' }}
         >
           An interactive analytics dashboard that turns raw vehicle insurance claims into
@@ -230,7 +230,7 @@ export function IntroPage() {
         </div>
 
         {/* Separator line */}
-        <div className="mt-8 w-px h-10 bg-gradient-to-b from-transparent via-teal-400/30 to-transparent" />
+        
 
         {/* Team section */}
         <div className="mt-8 flex flex-col items-center w-full max-w-2xl">
