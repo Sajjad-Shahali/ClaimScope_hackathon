@@ -14,11 +14,6 @@
 
 ---
 
-## Author
-
-| Name | Role |
-|------|------|
-| **Sajjad Shahali** | MSc. Data Science — Politecnico di Torino |
 
 ---
 
