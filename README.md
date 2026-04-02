@@ -1,207 +1,231 @@
-# WarrantyWise Backend
+# ClaimScope — Vehicle Claims Portfolio Intelligence
 
-WarrantyWise is a backend-first MVP for vehicle-claims portfolio intelligence. It helps insurance analysts spot:
-- warranties with disproportionate claim cost concentration
-- geographic imbalance across regions and provinces
-- brand/model segments concentrating severity
-- statistically unusual claims within explainable peer groups
+> ClaimScope is a vehicle insurance claims portfolio intelligence platform that identifies warranty concentration, geographic imbalance, and anomalous claims using explainable analytics. Built on DuckDB and IsolationForest, it turns raw claims data into actionable triage signals — no actuarial black boxes, no LLM fabrication.
 
-This project is intentionally **not** a fraud detection engine, **not** actuarial pricing, and **not** underwriting optimization. It is a decision-support analytics backend built on a **claims-only** dataset where premium is treated as an **imbalance proxy input**, not a true profitability denominator.
+**GitHub:** https://github.com/Sajjad-Shahali/ClaimScope_hackathon
 
-## Why this matters
+---
 
-Claims teams often have raw data but lack a fast, explainable analytics layer that can answer:
-- Which warranty segments concentrate paid loss?
-- Which regions consistently over-index on claim severity?
-- Which brand/model combinations are structurally different from peers?
-- Which claims are unusual relative to similar claims?
+## Team
 
-WarrantyWise packages that capability into:
-- a reproducible ETL and feature pipeline
-- DuckDB-backed analytics marts
-- a clean FastAPI service layer
-- deterministic anomaly screening with explainable reasons
-- a scaffold for a severity benchmark model
+| Name | Role |
+|------|------|
+| Sajjad Shahali | Team Lead / Backend & Data Pipeline |
+| Yosef Fayaz | Frontend & Visualization |
+| Ali Vaezi | Analytics & Anomaly Detection |
 
-## Architecture
+*MSc. Data Science — Politecnico di Torino*
 
-Core flow:
+---
 
-1. `pipeline/ingest.py` loads the Excel sheet `Claim`
-2. `pipeline/validate.py` creates data quality outputs
-3. `pipeline/clean.py` standardizes and flags data issues
-4. `pipeline/features.py` engineers explainable portfolio features
-5. `pipeline/anomaly.py` computes anomaly signals
-6. `pipeline/marts.py` builds marts and loads DuckDB
-7. `backend/app/*` exposes portfolio intelligence APIs
+## What it does
 
-Storage layers:
-- raw Excel in `data/raw/`
-- processed parquet outputs in `data/processed/`
-- analytic marts in `data/marts/`
-- DuckDB file in `data/duckdb/warrantywise.duckdb`
+ClaimScope answers four questions that claims analysts ask but rarely have fast answers to:
 
-## Folder structure
+1. **Which warranty segments concentrate paid loss?** — Bar charts, ranking tables, and trend lines across all warranties in the portfolio.
+2. **Which regions over-index on claim severity?** — Regional and province-level imbalance maps and drill-downs.
+3. **Which brand/model combinations are structurally different from peers?** — Vehicle segment concentration with peer-group benchmarking.
+4. **Which individual claims are statistically unusual?** — IsolationForest + peer-group z-score anomaly detection with human-readable reason strings.
 
-```text
-warrantywise/
-  README.md
-  pyproject.toml
-  .env.example
-  data/
-    raw/
-    processed/
-    marts/
-    duckdb/
-  backend/
-    app/
-    tests/
-  pipeline/
-  notebooks/
-  docs/
+It is intentionally **not** a fraud detection engine, **not** actuarial pricing, and **not** underwriting optimization. It is a decision-support analytics layer for portfolio triage.
+
+---
+
+## Tech stack
+
+### Backend
+| Layer | Technology |
+|-------|-----------|
+| API | FastAPI + Uvicorn |
+| Analytics | DuckDB (file-based OLAP) |
+| Pipeline | Polars (ETL) + Pandas (Excel ingestion) |
+| Storage | Apache Parquet + PyArrow |
+| Anomaly | Scikit-learn IsolationForest |
+| Severity model | LightGBM (optional) |
+| Validation | Pydantic v2 + pydantic-settings |
+| Testing | Pytest with synthetic fixture data |
+| Runtime | Python 3.12 |
+
+### Frontend
+| Layer | Technology |
+|-------|-----------|
+| Framework | React 18 + TypeScript + Vite |
+| Routing | React Router v7 |
+| Data fetching | TanStack React Query |
+| Charts | Recharts |
+| Styling | Tailwind CSS v3 + custom design tokens |
+| 3D intro | Three.js particle network |
+| Icons | Lucide React |
+| Fonts | Inter Variable + Fira Code |
+
+---
+
+## Project structure
+
+```
+ClaimScope_hackathon/
+├── README.md
+├── pyproject.toml
+├── .env.example
+│
+├── data/
+│   ├── raw/               ← place claim.xlsx here
+│   ├── processed/         ← parquet outputs from pipeline
+│   ├── marts/             ← analytic mart parquets
+│   └── duckdb/            ← claimscope.duckdb serving store
+│
+├── pipeline/
+│   ├── ingest.py          ← Excel → parquet
+│   ├── validate.py        ← data quality report
+│   ├── clean.py           ← flagging + normalization
+│   ├── features.py        ← feature engineering
+│   ├── anomaly.py         ← anomaly scoring
+│   ├── marts.py           ← mart builder + DuckDB loader
+│   ├── train_severity_model.py
+│   └── run_pipeline.py    ← single entry point
+│
+├── backend/
+│   └── app/
+│       ├── api/routes/    ← HTTP handlers
+│       ├── services/      ← orchestration + formatting
+│       ├── repositories/  ← DuckDB SQL access
+│       ├── schemas/       ← Pydantic response contracts
+│       ├── db/            ← lazy database connection
+│       └── core/          ← config + logging
+│
+├── frontend/
+│   ├── src/
+│   │   ├── pages/         ← Overview, Warranties, Geography, Vehicles, Anomalies, Claims, Insights, Intro
+│   │   ├── ui/
+│   │   │   ├── components/ ← KpiCard, ChartCard, DataTable, InsightList, FilterDock …
+│   │   │   └── layout/    ← AppLayout, Sidebar, TopBar
+│   │   ├── hooks/         ← useApiQuery, useDashboardFilters
+│   │   ├── lib/           ← api client, utils, formatters
+│   │   └── types/         ← API response types, filter types
+│   ├── tailwind.config.js
+│   └── vite.config.ts
+│
+├── docs/
+│   ├── architecture.md
+│   ├── methodology.md
+│   ├── data_dictionary.md
+│   └── handoff.md
+│
+└── notebooks/
 ```
 
-## Pipeline steps
+---
 
-### 1) Ingest
-Loads `data/raw/claims.xlsx` sheet `Claim`, standardizes columns, coerces types, and writes:
-- `data/processed/raw_claims.parquet`
+## Quick start
 
-### 2) Validate
-Generates data quality checks for:
-- row counts
-- duplicate-like rows
-- age validity
-- date parsing failures
-- null profile
-- region/province consistency
-- suspicious capped claims at exactly 10000
-- category cardinality
-
-Writes:
-- `data/processed/validation_report.json`
-- `data/processed/validation_summary.parquet`
-
-### 3) Clean
-Preserves raw signal while adding flags:
-- `is_age_invalid`
-- `is_geo_missing`
-- `is_vehicle_info_missing`
-- `is_duplicate_like`
-
-Also normalizes category text and imputes region from province where mapping is consistent.
-
-### 4) Feature engineering
-Creates:
-- time features
-- age buckets
-- imbalance proxy metrics
-- segment priors
-- peer-group expectations and z-scores
-
-### 5) Anomaly scoring
-Combines:
-- robust z-score within peer groups
-- Isolation Forest score
-- residual anomaly versus peer expectation
-
-Produces explainable reason strings and flags.
-
-### 6) Marts + DuckDB
-Builds:
-- `kpi_mart.parquet`
-- `warranty_mart.parquet`
-- `geography_mart.parquet`
-- `vehicle_mart.parquet`
-- `anomaly_mart.parquet`
-- `claim_detail_mart.parquet`
-- `trend_mart.parquet`
-
-And loads curated tables into:
-- `data/duckdb/warrantywise.duckdb`
-
-## API overview
-
-### Health
-- `GET /health`
-
-### Filters
-- `GET /filters`
-
-### KPIs
-- `GET /kpis`
-
-### Warranties
-- `GET /warranties/overview`
-- `GET /warranties/trend`
-- `GET /warranties/{warranty_name}`
-
-### Geography
-- `GET /geography/overview`
-- `GET /geography/trend`
-- `GET /geography/region/{region_name}`
-- `GET /geography/province/{province_name}`
-
-### Vehicles
-- `GET /vehicles/overview`
-- `GET /vehicles/brands/{brand_name}`
-- `GET /vehicles/models/search?q=...`
-
-### Claims
-- `GET /claims`
-- `GET /claims/{claim_id}`
-
-### Anomalies
-- `GET /anomalies`
-- `GET /anomalies/summary`
-
-### Insights
-- `GET /insights/summary`
-
-## Local setup
-
-### Install dependencies
+### 1. Create and activate a Python virtual environment
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
+python -m venv .env
+# Windows
+.env\Scripts\activate
+# macOS / Linux
+source .env/bin/activate
+```
+
+### 2. Install Python dependencies
+
+```bash
 pip install -U pip
 pip install -e ".[dev]"
-```
 
-Optional model extras:
-
-```bash
+# Optional: LightGBM severity model
 pip install -e ".[dev,model]"
 ```
 
-### Configure environment
+### 3. Configure environment
 
 ```bash
 cp .env.example .env
 ```
 
-### Add raw data
-Place the source file here:
+### 4. Add raw data
 
-```text
-data/raw/claims.xlsx
+Place the source Excel file at:
+
+```
+data/raw/claim.xlsx
 ```
 
-Expected sheet name:
-- `Claim`
+Expected sheet name: `Claim`
 
-## Run the pipeline
+### 5. Run the pipeline
 
 ```bash
 python -m pipeline.run_pipeline
 ```
 
-## Start the API
+This produces all processed parquets and loads `data/duckdb/claimscope.duckdb`.
+
+### 6. Start the backend API
 
 ```bash
 uvicorn backend.app.main:app --reload
 ```
+
+API available at: `http://127.0.0.1:8000`  
+Docs at: `http://127.0.0.1:8000/docs`
+
+### 7. Start the frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Dashboard at: `http://localhost:5173`
+
+---
+
+## API endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/health` | Service health + DuckDB status |
+| GET | `/filters` | Available filter options |
+| GET | `/kpis` | Portfolio KPI summary |
+| GET | `/warranties/overview` | Warranty ranking + metrics |
+| GET | `/warranties/trend` | Claim trend by warranty |
+| GET | `/warranties/{name}` | Single warranty drill-down |
+| GET | `/geography/overview` | Regional imbalance summary |
+| GET | `/geography/trend` | Geographic trend |
+| GET | `/geography/region/{name}` | Region drill-down |
+| GET | `/geography/province/{name}` | Province drill-down |
+| GET | `/vehicles/overview` | Brand/model concentration |
+| GET | `/vehicles/brands/{name}` | Brand drill-down |
+| GET | `/vehicles/models/search` | Model search |
+| GET | `/claims` | Paginated claim list |
+| GET | `/claims/{claim_id}` | Single claim detail + anomaly components |
+| GET | `/anomalies` | Anomaly-flagged claims |
+| GET | `/anomalies/summary` | Anomaly reason bucket summary |
+| GET | `/insights/summary` | Deterministic narrative insights |
+
+All endpoints accept filter query parameters: `warranty`, `region`, `province`, `brand`, `start_date`, `end_date`, `anomaly_only`, `high_cost_only`, `min_anomaly_score`.
+
+---
+
+## Dashboard pages
+
+| Page | Path | What it shows |
+|------|------|---------------|
+| Intro | `/` | Three.js particle landing, team cards, project entry |
+| Overview | `/app` | KPIs, warranty chart, regional chart, trend, anomaly buckets |
+| Warranties | `/app/warranties` | Full warranty ranking and drill-down |
+| Geography | `/app/geography` | Regional and province imbalance |
+| Vehicles | `/app/vehicles` | Brand and model concentration |
+| Anomalies | `/app/anomalies` | Anomaly list with score histogram |
+| Claims | `/app/claims` | Full claim table with detail modal |
+| Insights | `/app/insights` | Deterministic narrative text for presentations |
+
+Global filter panel on every page: searchable multi-select dropdowns for warranty, region, province, brand, age bucket, gender + date range and toggles.
+
+---
 
 ## Run tests
 
@@ -209,20 +233,14 @@ uvicorn backend.app.main:app --reload
 pytest
 ```
 
+Tests use synthetic fixture data — no real claim data is required.
+
+---
+
 ## Domain caveats
 
-- This is a **claims-only** dataset.
-- `PREMIUM_AMOUNT_PAID` is treated as an **imbalance proxy input**, not a true pricing or profitability denominator.
-- No exposure denominator is available.
-- No claim outcome lifecycle fields are available.
-- Anomaly flags indicate statistical unusualness, not fraud truth.
-- Severity benchmark outputs are scaffolds for comparison, not business truth or pricing decisions.
-
-## Future improvements
-
-- richer geography reference table
-- calendarized trend seasonality analysis
-- user authentication and saved views
-- materialized DuckDB refresh orchestration
-- front-end dashboard integration
-- optional model registry and benchmark tracking
+- This is a **claims-only** dataset. No policy exposure denominator is available.
+- `PREMIUM_AMOUNT_PAID` is an **imbalance proxy input**, not an actuarial loss ratio denominator.
+- Anomaly flags indicate statistical unusualness relative to peer groups — not fraud, waste, or abuse truth.
+- All insights are deterministically generated from computed metrics, not LLM-inferred.
+- Severity model outputs (when LightGBM is installed) are benchmarks for triage, not pricing decisions.
