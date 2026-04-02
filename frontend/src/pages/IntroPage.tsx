@@ -19,165 +19,140 @@ export function IntroPage() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // ── Renderer ─────────────────────────────────────────────────────────
-    const renderer = new THREE.WebGLRenderer({ canvas, alpha: false, antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    const W = window.innerWidth;
+    const H = window.innerHeight;
+
+    // ── Renderer ──────────────────────────────────────────────────────────
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: false, antialias: false });
+    renderer.setSize(W, H);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor(0x03080f, 1);
+    renderer.setClearColor(0x07111f, 1);
 
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(52, window.innerWidth / window.innerHeight, 1, 3000);
-    camera.position.set(0, 300, 540);
-    camera.lookAt(0, 0, 0);
+    const scene  = new THREE.Scene();
+    const camera = new THREE.OrthographicCamera(-W / 2, W / 2, H / 2, -H / 2, 0.1, 100);
+    camera.position.z = 10;
 
-    // ── Deep-space starfield (static) ────────────────────────────────────
-    const STAR_COUNT = 2200;
-    const starPos = new Float32Array(STAR_COUNT * 3);
-    for (let i = 0; i < STAR_COUNT; i++) {
-      const theta = Math.random() * Math.PI * 2;
-      const phi   = Math.acos(2 * Math.random() - 1);
-      const r     = 900 + Math.random() * 500;
-      starPos[i * 3]     = r * Math.sin(phi) * Math.cos(theta);
-      starPos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
-      starPos[i * 3 + 2] = r * Math.cos(phi);
-    }
-    const starGeo = new THREE.BufferGeometry();
-    starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
-    const starMat = new THREE.PointsMaterial({ color: 0xb8cce0, size: 0.85, sizeAttenuation: true });
-    scene.add(new THREE.Points(starGeo, starMat));
+    // ── Particles ─────────────────────────────────────────────────────────
+    // Each particle: [x, y, speed, size, opacity, colorVariant]
+    const COUNT = 110;
 
-    // ── Galaxy group (rotates as one unit) ───────────────────────────────
-    const galaxyGroup = new THREE.Group();
-    scene.add(galaxyGroup);
-
-    // Galaxy particles — 2 spiral arms, teal → white → violet gradient
-    const GALAXY_N = 750;
-    const gPos   = new Float32Array(GALAXY_N * 3);
-    const gColor = new Float32Array(GALAXY_N * 3);
-
-    for (let i = 0; i < GALAXY_N; i++) {
-      const arm = i % 2;
-      const t   = Math.pow(Math.random(), 0.55); // bias density toward center
-      const r   = 25 + t * 350;
-      const baseAngle    = (arm / 2) * Math.PI * 2;
-      const spiralAngle  = t * Math.PI * 5.8;
-      const jitter       = (Math.random() - 0.5) * (0.25 + t * 0.45);
-      const angle        = baseAngle + spiralAngle + jitter;
-      const radialScatter = (Math.random() - 0.5) * (10 + t * 28);
-
-      gPos[i * 3]     = Math.cos(angle) * r + radialScatter;
-      gPos[i * 3 + 1] = (Math.random() - 0.5) * (6 + t * 18); // disc thickness
-      gPos[i * 3 + 2] = Math.sin(angle) * r + radialScatter;
-
-      // Color — teal inner, silver mid, violet outer
-      if (t < 0.28) {
-        // teal  #5eead4
-        gColor[i * 3] = 0.369; gColor[i * 3 + 1] = 0.918; gColor[i * 3 + 2] = 0.831;
-      } else if (t < 0.58) {
-        // silver-white
-        gColor[i * 3] = 0.86; gColor[i * 3 + 1] = 0.89; gColor[i * 3 + 2] = 0.94;
-      } else {
-        // violet  #8b5cf6
-        gColor[i * 3] = 0.545; gColor[i * 3 + 1] = 0.361; gColor[i * 3 + 2] = 0.965;
-      }
+    interface Particle {
+      x: number; y: number;
+      vy: number;           // upward drift speed
+      vx: number;           // horizontal drift
+      size: number;
+      opacity: number;
+      color: number;        // hex
     }
 
-    const galaxyGeo = new THREE.BufferGeometry();
-    galaxyGeo.setAttribute('position', new THREE.BufferAttribute(gPos, 3));
-    galaxyGeo.setAttribute('color',    new THREE.BufferAttribute(gColor, 3));
-    const galaxyMat = new THREE.PointsMaterial({
-      size: 2.4,
-      sizeAttenuation: true,
-      vertexColors: true,
-      transparent: true,
-      opacity: 0.88,
-    });
-    galaxyGroup.add(new THREE.Points(galaxyGeo, galaxyMat));
-
-    // Connection lines — computed in galaxy local space (cheapest approach)
-    const LINE_N   = 220;           // only check first N particles
-    const MAX_LINES = 500;
-    const linePos  = new Float32Array(MAX_LINES * 6);
-    const lineGeo  = new THREE.BufferGeometry();
-    const lineAttr = new THREE.BufferAttribute(linePos, 3);
-    lineAttr.setUsage(THREE.DynamicDrawUsage);
-    lineGeo.setAttribute('position', lineAttr);
-    const lineMat = new THREE.LineBasicMaterial({
-      color: 0x5eead4,
-      transparent: true,
-      opacity: 0.10,
-    });
-    const lineSegs = new THREE.LineSegments(lineGeo, lineMat);
-    galaxyGroup.add(lineSegs); // rotates with galaxy — no transform needed
-
-    // Central glowing core
-    const coreGeo  = new THREE.SphereGeometry(7, 20, 20);
-    const coreMat  = new THREE.MeshBasicMaterial({ color: 0x5eead4, transparent: true, opacity: 0.95 });
-    const coreMesh = new THREE.Mesh(coreGeo, coreMat);
-    galaxyGroup.add(coreMesh);
-
-    // Soft outer halo around core
-    const haloGeo = new THREE.SphereGeometry(22, 20, 20);
-    const haloMat = new THREE.MeshBasicMaterial({ color: 0x5eead4, transparent: true, opacity: 0.07 });
-    galaxyGroup.add(new THREE.Mesh(haloGeo, haloMat));
-
-    // ── Mouse → smooth camera tilt ───────────────────────────────────────
-    const mouse  = { nx: 0, ny: 0 };
-    const camTarget = { x: 0, y: 300 };
-    const handleMouseMove = (e: MouseEvent) => {
-      mouse.nx = (e.clientX / window.innerWidth  - 0.5) * 2;
-      mouse.ny = -(e.clientY / window.innerHeight - 0.5) * 2;
+    const makeParticle = (randomY = false): Particle => {
+      const r = Math.random();
+      const color = r < 0.55 ? 0xffffff
+                  : r < 0.80 ? 0x5eead4
+                  :             0x8b5cf6;
+      return {
+        x:       (Math.random() - 0.5) * W,
+        y:       randomY ? (Math.random() - 0.5) * H : -H / 2 - 10,
+        vy:      0.18 + Math.random() * 0.28,
+        vx:      (Math.random() - 0.5) * 0.06,
+        size:    0.9 + Math.random() * 1.8,
+        opacity: 0.12 + Math.random() * 0.35,
+        color,
+      };
     };
-    window.addEventListener('mousemove', handleMouseMove);
 
-    // ── Animation loop ───────────────────────────────────────────────────
+    const particles: Particle[] = Array.from({ length: COUNT }, () => makeParticle(true));
+
+    // Build a single BufferGeometry for all particles
+    const positions = new Float32Array(COUNT * 3);
+    const geo = new THREE.BufferGeometry();
+    const posAttr = new THREE.BufferAttribute(positions, 3);
+    posAttr.setUsage(THREE.DynamicDrawUsage);
+    geo.setAttribute('position', posAttr);
+
+    // One Points object, white — teal/violet handled via separate smaller sets
+    const matWhite  = new THREE.PointsMaterial({ color: 0xffffff,  size: 2, sizeAttenuation: false, transparent: true, opacity: 0.22 });
+    const matTeal   = new THREE.PointsMaterial({ color: 0x5eead4,  size: 2, sizeAttenuation: false, transparent: true, opacity: 0.28 });
+    const matViolet = new THREE.PointsMaterial({ color: 0x8b5cf6,  size: 2, sizeAttenuation: false, transparent: true, opacity: 0.22 });
+
+    // Split into three color groups for separate draw calls (each gets its own Points)
+    const wIdx: number[] = [], tIdx: number[] = [], vIdx: number[] = [];
+    particles.forEach((p, i) => {
+      if (p.color === 0xffffff) wIdx.push(i);
+      else if (p.color === 0x5eead4) tIdx.push(i);
+      else vIdx.push(i);
+    });
+
+    const buildGeo = (indices: number[]) => {
+      const pos = new Float32Array(indices.length * 3);
+      const g = new THREE.BufferGeometry();
+      const a = new THREE.BufferAttribute(pos, 3);
+      a.setUsage(THREE.DynamicDrawUsage);
+      g.setAttribute('position', a);
+      return { geo: g, attr: a, pos, indices };
+    };
+
+    const white  = buildGeo(wIdx);
+    const teal   = buildGeo(tIdx);
+    const violet = buildGeo(vIdx);
+
+    scene.add(new THREE.Points(white.geo,  matWhite));
+    scene.add(new THREE.Points(teal.geo,   matTeal));
+    scene.add(new THREE.Points(violet.geo, matViolet));
+
+    // ── Subtle horizontal grid lines ──────────────────────────────────────
+    // A few faint horizontal rules at varying depths give a "data grid" feeling
+    const gridMat = new THREE.LineBasicMaterial({ color: 0x1e3a5f, transparent: true, opacity: 0.18 });
+    const GRID_LINES = 6;
+    for (let i = 0; i < GRID_LINES; i++) {
+      const y = -H / 2 + (i + 1) * (H / (GRID_LINES + 1));
+      const pts = [new THREE.Vector3(-W / 2, y, 0), new THREE.Vector3(W / 2, y, 0)];
+      const g = new THREE.BufferGeometry().setFromPoints(pts);
+      scene.add(new THREE.Line(g, gridMat));
+    }
+
+    // ── Animation ─────────────────────────────────────────────────────────
     let animationId: number;
-    const startTime = performance.now();
+
+    const syncGroup = (group: ReturnType<typeof buildGeo>) => {
+      group.indices.forEach((pi, slot) => {
+        const p = particles[pi];
+        group.pos[slot * 3]     = p.x;
+        group.pos[slot * 3 + 1] = p.y;
+        group.pos[slot * 3 + 2] = 0;
+      });
+      group.attr.needsUpdate = true;
+    };
 
     const animate = () => {
       animationId = requestAnimationFrame(animate);
-      const elapsed = (performance.now() - startTime) * 0.001; // seconds
 
-      // Rotate whole galaxy (arms, lines, core all move together)
-      galaxyGroup.rotation.y += 0.00042;
-
-      // Core breathing pulse
-      const pulse = 1 + Math.sin(elapsed * 1.7) * 0.14;
-      coreMesh.scale.setScalar(pulse);
-
-      // Update connection lines in local (pre-rotation) space
-      let li = 0;
-      for (let i = 0; i < LINE_N && li < MAX_LINES; i++) {
-        const ix = gPos[i * 3], iy = gPos[i * 3 + 1], iz = gPos[i * 3 + 2];
-        for (let j = i + 1; j < LINE_N && li < MAX_LINES; j++) {
-          const dx = ix - gPos[j * 3];
-          const dy = iy - gPos[j * 3 + 1];
-          const dz = iz - gPos[j * 3 + 2];
-          if (dx * dx + dy * dy + dz * dz < 72 * 72) {
-            linePos[li * 6]     = ix;  linePos[li * 6 + 1] = iy;  linePos[li * 6 + 2] = iz;
-            linePos[li * 6 + 3] = gPos[j * 3]; linePos[li * 6 + 4] = gPos[j * 3 + 1]; linePos[li * 6 + 5] = gPos[j * 3 + 2];
-            li++;
-          }
+      particles.forEach((p) => {
+        p.y += p.vy;
+        p.x += p.vx;
+        // Recycle when off top
+        if (p.y > H / 2 + 10) {
+          const fresh = makeParticle(false);
+          p.x = fresh.x; p.y = fresh.y;
+          p.vy = fresh.vy; p.vx = fresh.vx;
         }
-      }
-      lineGeo.setDrawRange(0, li * 2);
-      lineAttr.needsUpdate = true;
+      });
 
-      // Smooth camera shift toward mouse
-      camTarget.x += (mouse.nx * 65 - camTarget.x) * 0.022;
-      camTarget.y += (300 + mouse.ny * 30 - camTarget.y) * 0.022;
-      camera.position.x = camTarget.x;
-      camera.position.y = camTarget.y;
-      camera.lookAt(0, 0, 0);
+      syncGroup(white);
+      syncGroup(teal);
+      syncGroup(violet);
 
       renderer.render(scene, camera);
     };
 
     animate();
 
+    // ── Resize ────────────────────────────────────────────────────────────
     const handleResize = () => {
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      camera.aspect = window.innerWidth / window.innerHeight;
+      const nw = window.innerWidth, nh = window.innerHeight;
+      renderer.setSize(nw, nh);
+      camera.left = -nw / 2; camera.right  = nw / 2;
+      camera.top  =  nh / 2; camera.bottom = -nh / 2;
       camera.updateProjectionMatrix();
     };
     window.addEventListener('resize', handleResize);
@@ -185,13 +160,9 @@ export function IntroPage() {
     return () => {
       cancelAnimationFrame(animationId);
       window.removeEventListener('resize', handleResize);
-      window.removeEventListener('mousemove', handleMouseMove);
       renderer.dispose();
-      starGeo.dispose();   starMat.dispose();
-      galaxyGeo.dispose(); galaxyMat.dispose();
-      lineGeo.dispose();   lineMat.dispose();
-      coreGeo.dispose();   coreMat.dispose();
-      haloGeo.dispose();   haloMat.dispose();
+      [white, teal, violet].forEach(g => g.geo.dispose());
+      [matWhite, matTeal, matViolet].forEach(m => m.dispose());
     };
   }, []);
 
@@ -229,8 +200,37 @@ export function IntroPage() {
           Vehicle Claims Intelligence for Smarter Insurance Decisions
         </p>
 
+        {/* Description */}
+        <p
+          className="mt-5 max-w-xl text-sm text-slate-500 text-center leading-7 animate-fade-in"
+          style={{ animationDelay: '0.3s' }}
+        >
+          An interactive analytics dashboard that turns raw vehicle insurance claims into
+          actionable portfolio insights — spotting warranty concentration, geographic imbalance,
+          and statistically unusual claims with fully explainable, data-grounded signals.
+        </p>
+
+        {/* Feature pills */}
+        <div
+          className="mt-5 flex flex-wrap justify-center gap-2 animate-fade-in"
+          style={{ animationDelay: '0.38s' }}
+        >
+          {['Warranty Analysis', 'Geographic Imbalance', 'Anomaly Detection', 'Claim Drill-down', 'Narrative Insights'].map(label => (
+            <span
+              key={label}
+              className="rounded-full px-3 py-1 text-[11px] font-medium text-slate-400"
+              style={{
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px solid rgba(255,255,255,0.09)',
+              }}
+            >
+              {label}
+            </span>
+          ))}
+        </div>
+
         {/* Separator line */}
-        <div className="mt-8 w-px h-12 bg-gradient-to-b from-transparent via-teal-400/40 to-transparent" />
+        <div className="mt-8 w-px h-10 bg-gradient-to-b from-transparent via-teal-400/30 to-transparent" />
 
         {/* Team section */}
         <div className="mt-8 flex flex-col items-center w-full max-w-2xl">

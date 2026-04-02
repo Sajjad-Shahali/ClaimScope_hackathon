@@ -1,0 +1,168 @@
+{
+  "row_count": 237648,
+  "unique_claim_id_count": 237648,
+  "null_counts_by_column": {
+    "CLAIM_ID": 0,
+    "POLICYHOLDER_AGE": 0,
+    "POLICYHOLDER_GENDER": 6,
+    "WARRANTY": 0,
+    "CLAIM_DATE": 0,
+    "CLAIM_REGION": 1289,
+    "CLAIM_PROVINCE": 7610,
+    "VEHICLE_BRAND": 471,
+    "VEHICLE_MODEL": 412,
+    "CLAIM_AMOUNT_PAID": 0,
+    "PREMIUM_AMOUNT_PAID": 0
+  },
+  "negative_ages": 4,
+  "ages_below_18": 4,
+  "ages_above_100": 45,
+  "date_parsing_failures": 0,
+  "duplicate_like_rows_excluding_claim_id": 85,
+  "premium_to_warranty_consistency": [
+    {
+      "WARRANTY": "BUSINESS",
+      "unique_premium_values": 1,
+      "premium_std": 0.0
+    },
+    {
+      "WARRANTY": "ADDITIONAL COVERAGES",
+      "unique_premium_values": 1,
+      "premium_std": 0.0
+    },
+    {
+      "WARRANTY": "SPECIAL DEFENSE",
+      "unique_premium_values": 1,
+      "premium_std": 0.0
+    },
+    {
+      "WARRANTY": "OVER 65",
+      "unique_premium_values": 1,
+      "premium_std": 0.0
+    },
+    {
+      "WARRANTY": "WILD ANIMAL COLLISION",
+      "unique_premium_values": 1,
+      "premium_std": 0.0
+    },
+    {
+      "WARRANTY": "TRAVEL ASSISTANCE",
+      "unique_premium_values": 1,
+      "premium_std": 0.0
+    },
+    {
+      "WARRANTY": "SPECIAL TRAVEL",
+      "unique_premium_values": 1,
+      "premium_std": 0.0
+    },
+    {
+      "WARRANTY": "SOCIOPOLITICAL EVENTS",
+      "unique_premium_values": 1,
+      "premium_std": 0.0
+    },
+    {
+      "WARRANTY": "GLASSES",
+      "unique_premium_values": 1,
+      "premium_std": 0.0
+    },
+    {
+      "WARRANTY": "GREEN LINE",
+      "unique_premium_values": 1,
+      "premium_std": 0.0
+    },
+    {
+      "WARRANTY": "THEFT",
+      "unique_premium_values": 1,
+      "premium_std": 0.0
+    },
+    {
+      "WARRANTY": "ACCIDENTS",
+      "unique_premium_values": 1,
+      "premium_std": 0.0
+    },
+    {
+      "WARRANTY": "GUARANTEE FAILURES",
+      "unique_premium_values": 1,
+      "premium_std": 0.0
+    },
+    {
+      "WARRANTY": "DRIVER ACCIDENTS - HOSPITAL DAILY ALLOWANCE",
+      "unique_premium_values": 1,
+      "premium_std": 0.0
+    },
+    {
+      "WARRANTY": "KASCO AT FIRST ABSOLUTE RISK",
+      "unique_premium_values": 1,
+      "premium_std": null
+    },
+    {
+      "WARRANTY": "NATURAL DISASTERS",
+      "unique_premium_values": 1,
+      "premium_std": 0.0
+    },
+    {
+      "WARRANTY": "CIVIL LIABILITY FOR NON-COMMERCIAL VEHICLES",
+      "unique_premium_values": 1,
+      "premium_std": 0.0
+    },
+    {
+      "WARRANTY": "CIVIL LIABILITY INSURANCE",
+      "unique_premium_values": 1,
+      "premium_std": 0.0
+    },
+    {
+      "WARRANTY": "DRIVER ACCIDENTS - PERMANENT DISABILITY",
+      "unique_premium_values": 1,
+      "premium_std": 0.0
+    },
+    {
+      "WARRANTY": "VEHICLE FIRE",
+      "unique_premium_values": 1,
+      "premium_std": 0.0
+    },
+    {
+      "WARRANTY": "VANDALISM AND MALICIOUS ACTS BY THIRD PARTIES",
+      "unique_premium_values": 1,
+      "premium_std": null
+    },
+    {
+      "WARRANTY": "SAFE REIMBURSEMENT OPTION",
+      "unique_premium_values": 1,
+      "premium_std": 0.0
+    },
+    {
+      "WARRANTY": "POLE POSITION ASSISTANCE",
+      "unique_premium_values": 1,
+      "premium_std": 0.0
+    },
+    {
+      "WARRANTY": "DRIVER ACCIDENTS - MEDICAL EXPENSES",
+      "unique_premium_values": 1,
+      "premium_std": 0.0
+    },
+    {
+      "WARRANTY": "COLLISION WITH FOREIGN VEHICLES",
+      "unique_premium_values": 1,
+      "premium_std": 0.0
+    },
+    {
+      "WARRANTY": "PREMIUM PACKAGE - TRAVEL ASSISTANCE",
+      "unique_premium_values": 1,
+      "premium_std": 0.0
+    },
+    {
+      "WARRANTY": "LEGAL PROTECTION",
+      "unique_premium_values": 1,
+      "premium_std": 0.0
+    }
+  ],
+  "province_to_region_mapping_inconsistencies": 0,
+  "suspicious_capped_claims_at_10000": 38,
+  "category_cardinality_summary": {
+    "WARRANTY": 27,
+    "CLAIM_REGION": 21,
+    "CLAIM_PROVINCE": 110,
+    "VEHICLE_BRAND": 1214,
+    "VEHICLE_MODEL": 10327
+  }
+}
