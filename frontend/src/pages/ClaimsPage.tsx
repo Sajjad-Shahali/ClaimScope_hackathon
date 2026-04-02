@@ -5,7 +5,8 @@ import { api } from '@/lib/api';
 import { compactDate, formatCurrency, formatNumber } from '@/lib/utils';
 import { ClaimDetailModal } from '@/ui/components/ClaimDetailModal';
 import { DataTable } from '@/ui/components/DataTable';
-import { Search } from 'lucide-react';
+import { Search, Info } from 'lucide-react';
+import { Tooltip } from '@/ui/components/Tooltip';
 
 export function ClaimsPage() {
   const { filters, setFilters } = useDashboardFilters();
@@ -38,7 +39,12 @@ export function ClaimsPage() {
 
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <label>
-              <span className="mb-2 block text-xs uppercase tracking-[0.18em] text-slate-400">Sort by</span>
+              <div className="mb-2 flex items-center gap-1.5">
+                <span className="text-xs uppercase tracking-[0.18em] text-slate-400">Sort by</span>
+                <Tooltip text="Choose which metric to sort claims by: date, paid amount, or anomaly score.">
+                  <Info className="h-3 w-3 text-slate-600 hover:text-slate-400 cursor-help transition-colors" />
+                </Tooltip>
+              </div>
               <select className="select" value={sortBy} onChange={(event) => setSortBy(event.target.value)}>
                 <option value="claim_date">Claim date</option>
                 <option value="claim_amount_paid">Claim paid</option>
@@ -46,7 +52,12 @@ export function ClaimsPage() {
               </select>
             </label>
             <label>
-              <span className="mb-2 block text-xs uppercase tracking-[0.18em] text-slate-400">Order</span>
+              <div className="mb-2 flex items-center gap-1.5">
+                <span className="text-xs uppercase tracking-[0.18em] text-slate-400">Order</span>
+                <Tooltip text="Set sort direction. Descending shows highest values first — useful for spotting top-cost or highest-score claims.">
+                  <Info className="h-3 w-3 text-slate-600 hover:text-slate-400 cursor-help transition-colors" />
+                </Tooltip>
+              </div>
               <select className="select" value={sortOrder} onChange={(event) => setSortOrder(event.target.value as 'asc' | 'desc')}>
                 <option value="desc">Descending</option>
                 <option value="asc">Ascending</option>
@@ -59,12 +70,22 @@ export function ClaimsPage() {
                 onChange={(event) => setFilters((previous) => ({ ...previous, high_cost_only: event.target.checked }))}
               />
               <div>
-                <div className="text-sm font-medium text-white">High-cost only</div>
+                <div className="flex items-center gap-1.5">
+                  <div className="text-sm font-medium text-white">High-cost only</div>
+                  <Tooltip text="Filter to claims above the P95 severity threshold. Focus analyst attention on tail exposure.">
+                    <Info className="h-3 w-3 text-slate-600 hover:text-slate-400 cursor-help transition-colors" />
+                  </Tooltip>
+                </div>
                 <div className="text-xs text-slate-400">Refine explorer to severe cases.</div>
               </div>
             </label>
             <label>
-              <span className="mb-2 block text-xs uppercase tracking-[0.18em] text-slate-400">Search by Claim ID</span>
+              <div className="mb-2 flex items-center gap-1.5">
+                <span className="text-xs uppercase tracking-[0.18em] text-slate-400">Search by Claim ID</span>
+                <Tooltip text="Enter a claim ID directly to open its detail view — useful for investigating specific claims flagged in reports.">
+                  <Info className="h-3 w-3 text-slate-600 hover:text-slate-400 cursor-help transition-colors" />
+                </Tooltip>
+              </div>
               <div className="flex gap-2">
                 <input
                   className="input flex-1"

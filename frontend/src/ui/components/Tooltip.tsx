@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import type { ReactNode } from 'react';
 
 export function Tooltip({ children, text }: { children: ReactNode; text: string }) {
@@ -8,7 +9,7 @@ export function Tooltip({ children, text }: { children: ReactNode; text: string 
   const show = () => {
     if (!triggerRef.current) return;
     const r = triggerRef.current.getBoundingClientRect();
-    setPos({ top: r.top + window.scrollY, left: r.left + r.width / 2 });
+    setPos({ top: r.top, left: r.left + r.width / 2 });
   };
 
   return (
@@ -19,20 +20,21 @@ export function Tooltip({ children, text }: { children: ReactNode; text: string 
       onMouseLeave={() => setPos(null)}
     >
       {children}
-      {pos && (
+      {pos && createPortal(
         <span
           className="pointer-events-none whitespace-nowrap rounded-xl border border-white/10 bg-slate-900 px-3 py-2 text-xs text-slate-200 shadow-xl"
           style={{
             position: 'fixed',
-            top: pos.top - 8,
+            top: pos.top,
             left: pos.left,
-            transform: 'translate(-50%, -100%)',
+            transform: 'translate(-50%, calc(-100% - 8px))',
             zIndex: 9999,
           }}
         >
           {text}
           <span className="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-slate-900" />
-        </span>
+        </span>,
+        document.body,
       )}
     </span>
   );

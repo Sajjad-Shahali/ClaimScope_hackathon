@@ -38,12 +38,12 @@ export function InsightsPage() {
 
       {/* Insights grid */}
       <section className="grid gap-5 xl:grid-cols-2 animate-slide-up" style={{ animationDelay: '0.1s' }}>
-        <InsightList title="Top findings" items={insights.data?.top_findings ?? []} tone="accent" />
-        <InsightList title="Top warranty risks" items={insights.data?.top_warranty_risks ?? []} />
-        <InsightList title="Top geography risks" items={insights.data?.top_geography_risks ?? []} />
-        <InsightList title="Top vehicle segment risks" items={insights.data?.top_vehicle_segment_risks ?? []} />
-        <InsightList title="Anomaly headlines" items={insights.data?.anomaly_headlines ?? []} tone="danger" />
-        <InsightList title="Caveats" items={insights.data?.caveats ?? []} tone="violet" />
+        <InsightList title="Top findings" items={insights.data?.top_findings ?? []} tone="accent" tooltip="Data-grounded key findings ranked by statistical impact across the selected portfolio slice." />
+        <InsightList title="Top warranty risks" items={insights.data?.top_warranty_risks ?? []} tooltip="Warranty types flagged for elevated claim volume, severity, or imbalance proxy — prioritized for operational review." />
+        <InsightList title="Top geography risks" items={insights.data?.top_geography_risks ?? []} tooltip="Regions and provinces with the strongest concentration of loss exposure and anomaly signals." />
+        <InsightList title="Top vehicle segment risks" items={insights.data?.top_vehicle_segment_risks ?? []} tooltip="Brand and model combinations with elevated claim severity, anomaly rates, or concentration share." />
+        <InsightList title="Anomaly headlines" items={insights.data?.anomaly_headlines ?? []} tone="danger" tooltip="Plain-language summaries of the most statistically unusual claim patterns detected in the selected slice." />
+        <InsightList title="Caveats" items={insights.data?.caveats ?? []} tone="violet" tooltip="Important limitations on interpreting these findings — all metrics are claims-only and should be treated as triage signals." />
       </section>
 
       {/* Slide narrative */}

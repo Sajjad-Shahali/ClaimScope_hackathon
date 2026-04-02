@@ -9,6 +9,15 @@ import { DataTable } from '@/ui/components/DataTable';
 import { MetricPills } from '@/ui/components/MetricPills';
 import type { RankingRow } from '@/types/api';
 
+const SUMMARY_TOOLTIPS: Record<string, string> = {
+  claim_count: 'Total number of claims under this brand in the selected portfolio slice.',
+  total_claim_paid: 'Sum of all indemnity paid for this brand. Primary measure of loss exposure by manufacturer.',
+  avg_claim_paid: 'Mean indemnity per claim for this brand. Compare across brands to spot severity concentration.',
+  avg_claim_to_premium_ratio: 'Average claim-to-premium ratio for this brand. Values above 1 indicate claims exceed premiums collected.',
+  high_cost_share: 'Share of claims exceeding the P95 severity threshold for this brand.',
+  concentration_share: "This brand's share of total portfolio claims volume.",
+};
+
 export function VehiclesPage() {
   const { filters } = useDashboardFilters();
   const overview = useApiQuery(['vehicles-overview', filters], () => api.vehiclesOverview(filters));
@@ -83,10 +92,11 @@ export function VehiclesPage() {
           <div className="mt-5">
             <MetricPills
               items={[
-                { label: 'Anomaly rate', value: formatPercent(detail.data.anomaly_rate) },
+                { label: 'Anomaly rate', value: formatPercent(detail.data.anomaly_rate), tooltip: 'Share of claims under this brand flagged as statistically unusual. Elevated values may indicate brand-specific handling or mechanical patterns.' },
                 ...Object.entries(detail.data.summary).slice(0, 4).map(([key, value]) => ({
                   label: key,
                   value: typeof value === 'number' ? formatNumber(value, 2) : '—',
+                  tooltip: SUMMARY_TOOLTIPS[key],
                 })),
               ]}
             />

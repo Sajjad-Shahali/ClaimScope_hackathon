@@ -66,10 +66,10 @@ export function AnomaliesPage() {
         <div className="mt-5">
           <MetricPills
             items={[
-              { label: 'Anomaly count', value: formatNumber(summary.data?.anomaly_count) },
-              { label: 'Anomaly rate', value: formatPercent(summary.data?.anomaly_rate) },
-              { label: 'Top warranty buckets', value: formatNumber(summary.data?.concentration_by_warranty?.length) },
-              { label: 'Top reason buckets', value: formatNumber(summary.data?.top_reason_buckets?.length) },
+              { label: 'Anomaly count', value: formatNumber(summary.data?.anomaly_count), tooltip: 'Total number of claims flagged as statistically unusual by the peer-group z-score and IsolationForest model in the selected slice.' },
+              { label: 'Anomaly rate', value: formatPercent(summary.data?.anomaly_rate), tooltip: 'Percentage of claims flagged as anomalous. A high rate may indicate systematic patterns in warranty handling or data quality issues.' },
+              { label: 'Top warranty buckets', value: formatNumber(summary.data?.concentration_by_warranty?.length), tooltip: 'Number of distinct warranty categories where anomalous claims are concentrated. Helps prioritize warranty wording reviews.' },
+              { label: 'Top reason buckets', value: formatNumber(summary.data?.top_reason_buckets?.length), tooltip: 'Number of distinct anomaly reason categories detected. Multiple types suggest diverse risk drivers rather than a single pattern.' },
             ]}
           />
         </div>

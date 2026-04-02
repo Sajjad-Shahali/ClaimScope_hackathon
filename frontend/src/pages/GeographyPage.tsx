@@ -9,6 +9,15 @@ import { DataTable } from '@/ui/components/DataTable';
 import { MetricPills } from '@/ui/components/MetricPills';
 import type { RankingRow } from '@/types/api';
 
+const SUMMARY_TOOLTIPS: Record<string, string> = {
+  claim_count: 'Total claims in this geographic area within the selected portfolio slice.',
+  total_claim_paid: 'Sum of all indemnity paid in this area. Primary measure of geographic loss exposure.',
+  avg_claim_paid: 'Mean indemnity per claim for this area. Elevated values indicate severity concentration.',
+  avg_claim_to_premium_ratio: 'Average imbalance proxy for this area. Higher values signal disproportionate claim costs relative to premium.',
+  anomaly_rate: 'Share of claims in this area flagged as statistically unusual.',
+  high_cost_share: 'Share of claims exceeding the P95 severity threshold in this area.',
+};
+
 export function GeographyPage() {
   const { filters } = useDashboardFilters();
   const overview = useApiQuery(['geography-overview', filters], () => api.geographyOverview(filters));
@@ -95,6 +104,7 @@ export function GeographyPage() {
               items={Object.entries(activeDetail.summary).map(([key, value]) => ({
                 label: key,
                 value: typeof value === 'number' ? formatNumber(value, 2) : '—',
+                tooltip: SUMMARY_TOOLTIPS[key],
               }))}
             />
           </div>

@@ -1,4 +1,6 @@
 import { BarChart, Bar, CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis, Cell, ResponsiveContainer } from 'recharts';
+import { Info } from 'lucide-react';
+import { Tooltip as InfoTooltip } from '@/ui/components/Tooltip';
 import { useApiQuery } from '@/hooks/useApiQuery';
 import { useDashboardFilters } from '@/hooks/useDashboardFilters';
 import { useState } from 'react';
@@ -32,24 +34,27 @@ export function OverviewPage() {
           value={formatNumber(kpis.data?.kpis.total_claims)}
           helper="Claim records in the selected slice"
           delta={toNumber(delta.total_claims)}
+          tooltip="Total number of claim records in the selected portfolio slice. Use date range and segment filters to narrow the scope."
         />
         <KpiCard
           label="Total amount paid"
           value={formatCurrency(kpis.data?.kpis.total_amount_paid)}
           helper="Total indemnity paid by the insurer"
           delta={toNumber(delta.total_amount_paid)}
+          tooltip="Sum of all indemnity amounts paid by the insurer across the selected slice. The primary measure of loss exposure."
         />
         <KpiCard
           label="Average claim paid"
           value={formatCurrency(kpis.data?.kpis.avg_claim_paid)}
           helper="Mean severity across selected claims"
           delta={toNumber(delta.avg_claim_paid)}
+          tooltip="Mean indemnity per claim. Elevated values suggest severity concentration — compare against P95 for skew assessment."
         />
         <KpiCard
           label="Imbalance proxy"
           value={formatNumber(kpis.data?.kpis.avg_claim_to_premium_ratio, 2)}
           helper="Claims-only ratio, not true profitability"
-          tooltip="Claim-to-premium ratio — a proxy for portfolio imbalance, not true loss ratio"
+          tooltip="Claim-to-premium ratio — a proxy for portfolio imbalance, not true loss ratio. Premium is used as a proxy input, not a full actuarial denominator."
           delta={toNumber(delta.avg_claim_to_premium_ratio)}
         />
         <KpiCard
@@ -57,6 +62,7 @@ export function OverviewPage() {
           value={formatPercent(kpis.data?.kpis.anomaly_rate)}
           helper="Share of claims flagged as unusual"
           delta={toNumber(delta.anomaly_rate)}
+          tooltip="Percentage of claims flagged as statistically unusual by the peer-group z-score and IsolationForest model. Not a fraud indicator — treat as a triage signal."
         />
       </section>
 
@@ -108,10 +114,10 @@ export function OverviewPage() {
             <p>The strongest value comes from segmentation, benchmarking, and explanation rather than prediction theater.</p>
           </div>
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
-            <MiniMetric label="P95 severity" value={formatCurrency(kpis.data?.kpis.p95_claim_paid)} />
-            <MiniMetric label="High-cost rate" value={formatPercent(kpis.data?.kpis.high_cost_claim_rate)} />
-            <MiniMetric label="Anomaly count" value={formatNumber(kpis.data?.kpis.anomaly_count)} />
-            <MiniMetric label="Median ratio" value={formatNumber(kpis.data?.kpis.median_claim_to_premium_ratio, 2)} />
+            <MiniMetric label="P95 severity" value={formatCurrency(kpis.data?.kpis.p95_claim_paid)} tooltip="95th-percentile claim amount — only 5% of claims exceed this value. Tracks extreme-severity tail exposure." />
+            <MiniMetric label="High-cost rate" value={formatPercent(kpis.data?.kpis.high_cost_claim_rate)} tooltip="Share of claims exceeding the P95 severity threshold. A rising rate signals increasing tail concentration." />
+            <MiniMetric label="Anomaly count" value={formatNumber(kpis.data?.kpis.anomaly_count)} tooltip="Absolute number of claims flagged as anomalous in the selected slice. Divide by total claims to get the anomaly rate." />
+            <MiniMetric label="Median ratio" value={formatNumber(kpis.data?.kpis.median_claim_to_premium_ratio, 2)} tooltip="Median claim-to-premium ratio. Less sensitive to outliers than the mean — a stable baseline for imbalance tracking." />
           </div>
         </div>
       </section>
@@ -217,10 +223,17 @@ export function OverviewPage() {
   );
 }
 
-function MiniMetric({ label, value }: { label: string; value: string }) {
+function MiniMetric({ label, value, tooltip }: { label: string; value: string; tooltip?: string }) {
   return (
     <div className="panel-muted px-4 py-3">
-      <div className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">{label}</div>
+      <div className="flex items-center gap-1.5">
+        <div className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">{label}</div>
+        {tooltip && (
+          <InfoTooltip text={tooltip}>
+            <Info className="h-3 w-3 text-slate-600 hover:text-slate-400 cursor-help transition-colors" />
+          </InfoTooltip>
+        )}
+      </div>
       <div className="mt-1.5 text-lg font-semibold text-white tabular-nums" style={{ fontFamily: 'Fira Code, monospace' }}>{value}</div>
     </div>
   );

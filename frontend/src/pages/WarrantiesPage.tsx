@@ -72,10 +72,10 @@ export function WarrantiesPage() {
           <div className="mt-5">
             <MetricPills
               items={[
-                { label: 'Volume', value: formatNumber(detail.data.volume) },
-                { label: 'Average severity', value: formatCurrency(detail.data.severity_avg) },
-                { label: 'Imbalance proxy', value: formatNumber(detail.data.imbalance_proxy_avg, 2) },
-                { label: 'Anomaly rate', value: formatPercent(detail.data.anomaly_rate) },
+                { label: 'Volume', value: formatNumber(detail.data.volume), tooltip: 'Total number of claims under this warranty in the selected slice.' },
+                { label: 'Average severity', value: formatCurrency(detail.data.severity_avg), tooltip: 'Mean indemnity paid per claim for this warranty. Compare across warranties to spot disproportionate cost segments.' },
+                { label: 'Imbalance proxy', value: formatNumber(detail.data.imbalance_proxy_avg, 2), tooltip: 'Average claim-to-premium ratio for this warranty. Values above 1 indicate the claims paid exceed the premium collected.' },
+                { label: 'Anomaly rate', value: formatPercent(detail.data.anomaly_rate), tooltip: 'Share of claims under this warranty flagged as statistically unusual. A high rate warrants wording and handling review.' },
               ]}
             />
           </div>

@@ -1,3 +1,6 @@
+import { Info } from 'lucide-react';
+import { Tooltip } from './Tooltip';
+
 type Tone = 'default' | 'danger' | 'accent' | 'violet';
 
 const toneConfig: Record<Tone, { dot: string; border: string; rowBg: string; rowHover: string }> = {
@@ -31,10 +34,12 @@ export function InsightList({
   title,
   items,
   tone = 'default',
+  tooltip,
 }: {
   title: string;
   items: string[];
   tone?: Tone;
+  tooltip?: string;
 }) {
   const cfg = toneConfig[tone];
   return (
@@ -42,6 +47,11 @@ export function InsightList({
       <div className="mb-4 flex items-center gap-2.5">
         <div className={`h-2 w-2 rounded-full flex-shrink-0 ${cfg.dot}`} />
         <h3 className="section-title">{title}</h3>
+        {tooltip && (
+          <Tooltip text={tooltip}>
+            <Info className="h-3 w-3 text-slate-600 hover:text-slate-400 cursor-help transition-colors" />
+          </Tooltip>
+        )}
       </div>
       {items.length === 0 ? (
         <p className="text-sm text-slate-600 py-4 text-center italic">No insights available for the current filters.</p>
