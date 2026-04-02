@@ -8,12 +8,25 @@
   <img src="frontend/src/dashboard.png" alt="ClaimScope Dashboard" width="100%" />
 </p>
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Python 3.12](https://img.shields.io/badge/Python-3.12-3776ab.svg)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688.svg)](https://fastapi.tiangolo.com/)
+[![DuckDB](https://img.shields.io/badge/DuckDB-OLAP-f5d000.svg)](https://duckdb.org/)
+[![Polars](https://img.shields.io/badge/Polars-ETL-cd792c.svg)](https://pola.rs/)
+[![scikit-learn](https://img.shields.io/badge/scikit--learn-IsolationForest-f7931e.svg)](https://scikit-learn.org/)
+[![Pydantic](https://img.shields.io/badge/Pydantic-v2-e92063.svg)](https://docs.pydantic.dev/)
+[![React 18](https://img.shields.io/badge/React-18-61dafb.svg)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6.svg)](https://www.typescriptlang.org/)
+[![React Router](https://img.shields.io/badge/React_Router-v7-ca4245.svg)](https://reactrouter.com/)
+[![TanStack Query](https://img.shields.io/badge/TanStack_Query-v5-ff4154.svg)](https://tanstack.com/query)
+[![Vite](https://img.shields.io/badge/Vite-5-646cff.svg)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38bdf8.svg)](https://tailwindcss.com/)
+[![Three.js](https://img.shields.io/badge/Three.js-r167-black.svg)](https://threejs.org/)
+[![Recharts](https://img.shields.io/badge/Recharts-2-22d3ee.svg)](https://recharts.org/)
+
 > ClaimScope is a vehicle insurance claims portfolio intelligence platform that identifies warranty concentration, geographic imbalance, and anomalous claims using explainable analytics. Built on DuckDB and IsolationForest, it turns raw claims data into actionable triage signals — no actuarial black boxes, no LLM fabrication.
 
 **GitHub:** https://github.com/Sajjad-Shahali/ClaimScope_hackathon
-
----
-
 
 ---
 
