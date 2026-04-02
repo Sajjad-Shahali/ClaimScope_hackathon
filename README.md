@@ -110,20 +110,14 @@ ClaimScope_hackathon/
 │   │   ├── pages/         ← Overview, Warranties, Geography, Vehicles, Anomalies, Claims, Insights, Intro
 │   │   ├── ui/
 │   │   │   ├── components/ ← KpiCard, ChartCard, DataTable, InsightList, MetricPills, FilterDock …
-│   │   │   └── layout/    ← AppLayout, Sidebar, TopBar
-│   │   ├── hooks/         ← useApiQuery, useDashboardFilters
-│   │   ├── lib/           ← api client, utils, formatters
-│   │   └── types/         ← API response types, filter types
-│   ├── tailwind.config.js
-│   └── vite.config.ts
-│
-├── docs/
-│   ├── architecture.md
-│   ├── methodology.md
-│   ├── data_dictionary.md
-│   └── handoff.md
-│
-└── notebooks/
+    │   │   └── layout/    ← AppLayout, Sidebar, TopBar
+    │   ├── hooks/         ← useApiQuery, useDashboardFilters
+    │   ├── lib/           ← api client, utils, formatters
+    │   └── types/         ← API response types, filter types
+    ├── tailwind.config.js
+    └── vite.config.ts
+
+
 ```
 
 ---
