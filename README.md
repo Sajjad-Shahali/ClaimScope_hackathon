@@ -1,20 +1,24 @@
 # ClaimScope — Vehicle Claims Portfolio Intelligence
 
+<p align="center">
+  <img src="frontend/src/intropage.png" alt="ClaimScope Intro Page" width="100%" />
+</p>
+
+<p align="center">
+  <img src="frontend/src/dashboard.png" alt="ClaimScope Dashboard" width="100%" />
+</p>
+
 > ClaimScope is a vehicle insurance claims portfolio intelligence platform that identifies warranty concentration, geographic imbalance, and anomalous claims using explainable analytics. Built on DuckDB and IsolationForest, it turns raw claims data into actionable triage signals — no actuarial black boxes, no LLM fabrication.
 
 **GitHub:** https://github.com/Sajjad-Shahali/ClaimScope_hackathon
 
 ---
 
-## Team
+## Author
 
 | Name | Role |
 |------|------|
-| Sajjad Shahali | Team Lead / Backend & Data Pipeline |
-| Yosef Fayaz | Frontend & Visualization |
-| Ali Vaezi | Analytics & Anomaly Detection |
-
-*MSc. Data Science — Politecnico di Torino*
+| **Sajjad Shahali** | MSc. Data Science — Politecnico di Torino |
 
 ---
 
@@ -54,7 +58,7 @@ It is intentionally **not** a fraud detection engine, **not** actuarial pricing,
 | Data fetching | TanStack React Query |
 | Charts | Recharts |
 | Styling | Tailwind CSS v3 + custom design tokens |
-| 3D intro | Three.js particle network |
+| 3D intro | Three.js network constellation |
 | Icons | Lucide React |
 | Fonts | Inter Variable + Fira Code |
 
@@ -97,7 +101,7 @@ ClaimScope_hackathon/
 │   ├── src/
 │   │   ├── pages/         ← Overview, Warranties, Geography, Vehicles, Anomalies, Claims, Insights, Intro
 │   │   ├── ui/
-│   │   │   ├── components/ ← KpiCard, ChartCard, DataTable, InsightList, FilterDock …
+│   │   │   ├── components/ ← KpiCard, ChartCard, DataTable, InsightList, MetricPills, FilterDock …
 │   │   │   └── layout/    ← AppLayout, Sidebar, TopBar
 │   │   ├── hooks/         ← useApiQuery, useDashboardFilters
 │   │   ├── lib/           ← api client, utils, formatters
@@ -214,7 +218,7 @@ All endpoints accept filter query parameters: `warranty`, `region`, `province`, 
 
 | Page | Path | What it shows |
 |------|------|---------------|
-| Intro | `/` | Three.js particle landing, team cards, project entry |
+| Intro | `/` | Three.js network constellation landing, author card, project entry |
 | Overview | `/app` | KPIs, warranty chart, regional chart, trend, anomaly buckets |
 | Warranties | `/app/warranties` | Full warranty ranking and drill-down |
 | Geography | `/app/geography` | Regional and province imbalance |
@@ -223,7 +227,9 @@ All endpoints accept filter query parameters: `warranty`, `region`, `province`, 
 | Claims | `/app/claims` | Full claim table with detail modal |
 | Insights | `/app/insights` | Deterministic narrative text for presentations |
 
-Global filter panel on every page: searchable multi-select dropdowns for warranty, region, province, brand, age bucket, gender + date range and toggles.
+Global filter panel on every page: searchable multi-select dropdowns for warranty, region, province, brand, age bucket, gender + date range and toggles. Auto-expands on Overview, auto-collapses on all other tabs.
+
+Every metric box and insight panel includes an info icon (ⓘ) with a hover tooltip explaining the metric's meaning and analytical context.
 
 ---
 
