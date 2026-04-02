@@ -1,6 +1,7 @@
-import { BarChart, Bar, CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
+import { BarChart, Bar, CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis, Cell, ResponsiveContainer } from 'recharts';
 import { useApiQuery } from '@/hooks/useApiQuery';
 import { useDashboardFilters } from '@/hooks/useDashboardFilters';
+import { useState } from 'react';
 import { api } from '@/lib/api';
 import { formatCurrency, formatNumber, formatPercent } from '@/lib/utils';
 import { KpiCard } from '@/ui/components/KpiCard';
@@ -11,6 +12,7 @@ import type { RankingRow } from '@/types/api';
 
 export function OverviewPage() {
   const { filters, setFilters } = useDashboardFilters();
+  const [hoveredWarranty, setHoveredWarranty] = useState<string | null>(null);
 
   const kpis = useApiQuery(['kpis', filters], () => api.kpis(filters));
   const warranties = useApiQuery(['warranty-overview', filters], () => api.warrantiesOverview(filters));
@@ -62,27 +64,31 @@ export function OverviewPage() {
         <ChartCard
           title="Warranty concentration and cost"
           subtitle="Click a bar to filter by warranty. Which warranties carry both scale and disproportionate paid amount?"
-          height={340}
+          height={500}
         >
-          <BarChart data={(warranties.data?.items ?? []).slice(0, 8)}>
+          <BarChart
+            data={(warranties.data?.items ?? []).slice(0, 20)}
+            style={{ cursor: 'pointer' }}
+            onClick={(chartData: any) => {
+              const seg = chartData?.activePayload?.[0]?.payload?.segment;
+              if (seg) setFilters(p => ({ ...p, warranty: [seg] }));
+            }}
+          >
             <defs>
               <linearGradient id="warrantyGrad" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#5eead4" stopOpacity={1} />
                 <stop offset="100%" stopColor="#5eead4" stopOpacity={0.4} />
               </linearGradient>
             </defs>
-            <CartesianGrid stroke="rgba(255,255,255,0.08)" vertical={false} />
-            <XAxis dataKey="segment" stroke="#94a3b8" tickLine={false} axisLine={false} />
-            <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} />
-            <Tooltip contentStyle={{}} wrapperClassName="chart-tooltip" />
+            <CartesianGrid stroke="rgba(255,255,255,0.1)" vertical={false} />
+            <XAxis dataKey="segment" stroke="#94a3b8" tickLine={false} axisLine={false} tick={{ fontSize: 10 }} interval={0} angle={-50} textAnchor="end" height={200} />
+            <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} tick={{ fontSize: 10 }} />
+            <Tooltip contentStyle={{}} wrapperClassName="chart-tooltip" cursor={{ fill: 'rgba(94,234,212,0.1)' }} />
             <Bar
               dataKey="total_claim_paid"
               fill="url(#warrantyGrad)"
               radius={[12, 12, 0, 0]}
-              className="cursor-pointer"
-              onClick={(data) => {
-                if (data?.segment) setFilters(p => ({ ...p, warranty: [data.segment] }));
-              }}
+              activeBar={{ fill: '#8b5cf6', opacity: 1 }}
             />
           </BarChart>
         </ChartCard>
@@ -124,8 +130,8 @@ export function OverviewPage() {
               </linearGradient>
             </defs>
             <CartesianGrid stroke="rgba(255,255,255,0.08)" vertical={false} />
-            <XAxis dataKey="period" stroke="#94a3b8" tickLine={false} axisLine={false} />
-            <YAxis stroke="#94a3b8" tickLine={false} axisLine={false} />
+            <XAxis dataKey="period" stroke="#94a3b8" tickLine={false} axisLine={false}  tick={{ fontSize: 12 }}  />
+            <YAxis stroke="#94a3b8" tickLine={false} axisLine={false}  tick={{ fontSize: 10 }} />
             <Tooltip wrapperClassName="chart-tooltip" />
             <Line type="monotone" dataKey="value" stroke="url(#lineGrad)" strokeWidth={3} dot={false} />
           </LineChart>
@@ -136,7 +142,15 @@ export function OverviewPage() {
           subtitle="Click a bar to filter by region. Top regions by claims paid across the active portfolio slice."
           height={320}
         >
-          <BarChart layout="vertical" data={(geography.data?.regions ?? []).slice(0, 6)}>
+          <BarChart
+            layout="vertical"
+            data={(geography.data?.regions ?? []).slice(0, 6)}
+            style={{ cursor: 'pointer' }}
+            onClick={(chartData: any) => {
+              const seg = chartData?.activePayload?.[0]?.payload?.segment;
+              if (seg) setFilters(p => ({ ...p, region: [seg] }));
+            }}
+          >
             <defs>
               <linearGradient id="regionGrad" x1="1" y1="0" x2="0" y2="0">
                 <stop offset="0%" stopColor="#8b5cf6" stopOpacity={1} />
@@ -146,15 +160,12 @@ export function OverviewPage() {
             <CartesianGrid stroke="rgba(255,255,255,0.08)" horizontal={false} />
             <XAxis type="number" stroke="#94a3b8" tickLine={false} axisLine={false} />
             <YAxis dataKey="segment" type="category" stroke="#94a3b8" tickLine={false} axisLine={false} width={90} />
-            <Tooltip wrapperClassName="chart-tooltip" />
+            <Tooltip wrapperClassName="chart-tooltip" cursor={{ fill: 'rgba(139,92,246,0.1)' }} />
             <Bar
               dataKey="avg_claim_to_premium_ratio"
               fill="url(#regionGrad)"
               radius={[0, 12, 12, 0]}
-              className="cursor-pointer"
-              onClick={(data) => {
-                if (data?.segment) setFilters(p => ({ ...p, region: [data.segment] }));
-              }}
+              activeBar={{ fill: '#5eead4', opacity: 1 }}
             />
           </BarChart>
         </ChartCard>

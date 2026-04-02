@@ -1,7 +1,12 @@
 import { BarChart3, Globe2, ShieldAlert, ShieldCheck, Sparkles, CarFront, Search, X } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import clsx from 'clsx';
+import logo from '../../logo.png';
 
+
+const logosrc = [
+  { alt: 'logo', img: logo }
+];
 const navigation = [
   { to: '/app', label: 'Overview', icon: BarChart3, end: true },
   { to: '/app/warranties', label: 'Warranties', icon: ShieldCheck, end: false },
@@ -32,10 +37,13 @@ export function Sidebar({ onClose }: SidebarProps) {
         <div className="flex items-center justify-between px-1 pt-1">
           <div className="flex items-center gap-3">
             <div
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl shadow-glow"
-              style={{ background: 'linear-gradient(135deg, #5eead4 0%, #8b5cf6 100%)' }}
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl "
+              
+
             >
-              <ShieldCheck className="h-4 w-4 text-slate-950" />
+              <img src={logosrc[0].img} alt={logosrc[0].alt} />
+              
+              
             </div>
             <div>
               <p className="text-[9px] font-bold uppercase tracking-[0.3em] text-teal-400/60">ClaimScope</p>

@@ -40,7 +40,7 @@ export function KpiCard({
         )}
       </div>
       <div
-        className="mt-3 font-mono text-3xl font-semibold tracking-tight text-white tabular-nums"
+        className="mt-3 font-mono text-2xl font-semibold tracking-tight text-white tabular-nums"
         style={{ fontFamily: 'Fira Code, monospace' }}
       >
         {value}

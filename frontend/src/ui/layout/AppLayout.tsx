@@ -14,9 +14,12 @@ export function AppLayout() {
       <div className="min-h-screen">
         {/* Mobile overlay */}
         {sidebarOpen && (
-          <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden" onClick={() => setSidebarOpen(false)} />
+          <div
+            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
         )}
-        {/* Mobile sidebar */}
+        {/* Mobile sidebar drawer */}
         <div className={`fixed inset-y-0 left-0 z-50 w-[280px] transform transition-transform duration-300 lg:hidden ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
           <div className="h-full overflow-y-auto p-4">
             <Sidebar onClose={() => setSidebarOpen(false)} />
@@ -28,16 +31,19 @@ export function AppLayout() {
           <div className="hidden lg:block">
             <Sidebar />
           </div>
-          <div className="min-w-0 flex-1 space-y-6">
-            {/* Mobile topbar with hamburger */}
+
+          <div className="min-w-0 flex-1 space-y-4">
+            {/* Mobile hamburger */}
             <div className="flex items-center gap-3 lg:hidden">
               <button className="button p-3" onClick={() => setSidebarOpen(true)}>
                 <Menu className="h-5 w-5" />
               </button>
-              <span className="text-sm font-semibold text-white">WarrantyWise</span>
+              <span className="text-sm font-semibold text-white">ClaimScope</span>
             </div>
+
             <TopBar />
             <FilterDock />
+
             <main>
               <Outlet />
             </main>
